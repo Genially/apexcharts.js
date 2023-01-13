@@ -18,6 +18,7 @@ class Legend {
 
     this.onLegendClick = this.onLegendClick.bind(this)
     this.onLegendHovered = this.onLegendHovered.bind(this)
+    this.onLegendKeypress = this.onLegendKeypress.bind(this)
 
     this.isBarsDistributed =
       this.w.config.chart.type === 'bar' &&
@@ -204,6 +205,8 @@ class Legend {
       }
 
       let elLegend = document.createElement('div')
+      elLegend.setAttribute('role', 'button')
+      elLegend.setAttribute('tabindex', '0')
 
       let elLegendText = document.createElement('span')
       elLegendText.classList.add('apexcharts-legend-text')
@@ -291,6 +294,7 @@ class Legend {
     }
 
     w.globals.dom.elWrap.addEventListener('click', me.onLegendClick, true)
+    w.globals.dom.elWrap.addEventListener('keypress', me.onLegendKeypress, true)
 
     if (
       w.config.legend.onItemHover.highlightDataSeries &&
@@ -440,7 +444,8 @@ class Legend {
 
     if (
       e.target.classList.contains('apexcharts-legend-text') ||
-      e.target.classList.contains('apexcharts-legend-marker')
+      e.target.classList.contains('apexcharts-legend-marker') ||
+      e.target.classList.contains('apexcharts-legend-series')
     ) {
       let seriesCnt = parseInt(e.target.getAttribute('rel'), 10) - 1
       let isHidden = e.target.getAttribute('data:collapsed') === 'true'
@@ -474,6 +479,15 @@ class Legend {
       if (clickAllowed && w.config.legend.onItemClick.toggleDataSeries) {
         this.legendHelpers.toggleDataSeries(seriesCnt, isHidden)
       }
+    }
+  }
+
+  onLegendKeypress(e) {
+    console.log({ key: e.key })
+
+    if (e.key === 'Enter') {
+      console.log('llamamos ')
+      this.onLegendClick(e)
     }
   }
 }
