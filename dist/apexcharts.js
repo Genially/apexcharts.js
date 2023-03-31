@@ -1,5 +1,5 @@
 /*!
- * ApexCharts v1.0.2
+ * ApexCharts v1.0.3
  * (c) 2018-2023 Juned Chhipa
  * Released under the MIT License.
  */
@@ -14663,7 +14663,6 @@
       this.w = ctx.w;
       this.onLegendClick = this.onLegendClick.bind(this);
       this.onLegendHovered = this.onLegendHovered.bind(this);
-      this.onLegendKeypress = this.onLegendKeypress.bind(this);
       this.isBarsDistributed = this.w.config.chart.type === 'bar' && this.w.config.plotOptions.bar.distributed && this.w.config.series.length === 1;
       this.legendHelpers = new Helpers$3(this);
     }
@@ -14801,8 +14800,6 @@
           }
 
           var elLegend = document.createElement('div');
-          elLegend.setAttribute('role', 'button');
-          elLegend.setAttribute('tabindex', '0');
           var elLegendText = document.createElement('span');
           elLegendText.classList.add('apexcharts-legend-text');
           elLegendText.innerHTML = Array.isArray(text) ? Utils.sanitizeDom(text.join(' ')) : Utils.sanitizeDom(text);
@@ -14863,7 +14860,6 @@
         }
 
         w.globals.dom.elWrap.addEventListener('click', self.onLegendClick, true);
-        w.globals.dom.elWrap.addEventListener('keypress', self.onLegendKeypress, true);
 
         if (w.config.legend.onItemHover.highlightDataSeries && w.config.legend.customLegendItems.length === 0) {
           w.globals.dom.elWrap.addEventListener('mousemove', self.onLegendHovered, true);
@@ -14977,7 +14973,7 @@
         var w = this.w;
         if (w.config.legend.customLegendItems.length) return;
 
-        if (e.target.classList.contains('apexcharts-legend-text') || e.target.classList.contains('apexcharts-legend-marker') || e.target.classList.contains('apexcharts-legend-series')) {
+        if (e.target.classList.contains('apexcharts-legend-text') || e.target.classList.contains('apexcharts-legend-marker')) {
           var seriesCnt = parseInt(e.target.getAttribute('rel'), 10) - 1;
           var isHidden = e.target.getAttribute('data:collapsed') === 'true';
           var legendClick = this.w.config.chart.events.legendClick;
@@ -15000,18 +14996,6 @@
           if (clickAllowed && w.config.legend.onItemClick.toggleDataSeries) {
             this.legendHelpers.toggleDataSeries(seriesCnt, isHidden);
           }
-        }
-      }
-    }, {
-      key: "onLegendKeypress",
-      value: function onLegendKeypress(e) {
-        console.log({
-          key: e.key
-        });
-
-        if (e.key === 'Enter') {
-          console.log('llamamos ');
-          this.onLegendClick(e);
         }
       }
     }]);
