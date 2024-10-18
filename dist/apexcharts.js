@@ -1,6 +1,6 @@
 /*!
- * ApexCharts v1.0.3
- * (c) 2018-2023 Juned Chhipa
+ * ApexCharts v3.27.3
+ * (c) 2018-2024 Juned Chhipa
  * Released under the MIT License.
  */
 (function (global, factory) {
