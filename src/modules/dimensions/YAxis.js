@@ -78,7 +78,7 @@ export default class DimYAxis {
           yaxe.labels.style.fontSize,
           yaxe.labels.style.fontFamily,
           rotateStr,
-          false
+          true
         )
 
         let arrLabelrect = rect
@@ -89,7 +89,7 @@ export default class DimYAxis {
             yaxe.labels.style.fontSize,
             yaxe.labels.style.fontFamily,
             rotateStr,
-            false
+            true
           )
         }
 
