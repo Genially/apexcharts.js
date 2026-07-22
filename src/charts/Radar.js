@@ -81,6 +81,13 @@ class Radar {
     if (series.length) {
       this.dataPointsLen = series[w.globals.maxValsInArrayIndex].length
     }
+    if (!this.dataPointsLen) {
+      // When every series is collapsed via the legend the series data become
+      // empty ([[],[],[]]), so dataPointsLen would be 0 and the radar skeleton
+      // (grid, spokes and axis labels) would vanish. Fall back to the axis
+      // categories so the skeleton keeps rendering with no series drawn.
+      this.dataPointsLen = w.globals.labels.length
+    }
     this.disAngle = (Math.PI * 2) / this.dataPointsLen
 
     let halfW = w.globals.gridWidth / 2
