@@ -288,8 +288,8 @@ export default class Tooltip {
 
     let tooltipRect = tooltipEl.getBoundingClientRect()
 
-    let ttWidth = tooltipRect.width + 10
-    let ttHeight = tooltipRect.height + 10
+    let ttWidth = tooltipRect.width / w.config.chart.scale + 10
+    let ttHeight = tooltipRect.height / w.config.chart.scale + 10
     let x = this.tConfig.fixed.offsetX
     let y = this.tConfig.fixed.offsetY
 
@@ -412,8 +412,8 @@ export default class Tooltip {
     ttCtx.tooltipRect = {
       x: 0,
       y: 0,
-      ttWidth: tooltipEl.getBoundingClientRect().width,
-      ttHeight: tooltipEl.getBoundingClientRect().height
+      ttWidth: tooltipEl.getBoundingClientRect().width / w.config.chart.scale,
+      ttHeight: tooltipEl.getBoundingClientRect().height / w.config.chart.scale
     }
     ttCtx.e = e
 
@@ -580,8 +580,13 @@ export default class Tooltip {
         shared: false
       })
 
-      let x = w.globals.clientX - seriesBound.left - tooltipRect.ttWidth / 2
-      let y = w.globals.clientY - seriesBound.top - tooltipRect.ttHeight - 10
+      let x =
+        (w.globals.clientX - seriesBound.left) / w.config.chart.scale -
+        tooltipRect.ttWidth / 2
+      let y =
+        (w.globals.clientY - seriesBound.top) / w.config.chart.scale -
+        tooltipRect.ttHeight -
+        10
 
       tooltipEl.style.left = x + 'px'
       tooltipEl.style.top = y + 'px'

@@ -1,5 +1,5 @@
 /*!
- * ApexCharts v3.27.3-fix-1
+ * ApexCharts v3.27.3-fix-3
  * (c) 2018-2026 Juned Chhipa
  * Released under the MIT License.
  */
@@ -15066,10 +15066,14 @@
           e: e
         });
 
-        // Re-calculate tooltip dimensions now that we have drawn the text
+        // Re-calculate tooltip dimensions now that we have drawn the text.
+        // clientX/clientY and getBoundingClientRect() are viewport px, already multiplied by
+        // the canvas zoom, while style.left/top resolve in the scaled container's local px.
+        // Genially's View renders the slide inside a transform: scale(), so normalise by
+        // chart.scale (default 1) — as Tooltip.Utils already does.
         var tooltipEl = this.ttCtx.getElTooltip();
-        this.ttCtx.tooltipRect.ttWidth = tooltipEl.getBoundingClientRect().width;
-        this.ttCtx.tooltipRect.ttHeight = tooltipEl.getBoundingClientRect().height;
+        this.ttCtx.tooltipRect.ttWidth = tooltipEl.getBoundingClientRect().width / w.config.chart.scale;
+        this.ttCtx.tooltipRect.ttHeight = tooltipEl.getBoundingClientRect().height / w.config.chart.scale;
       }
     }, {
       key: "printLabels",
@@ -15572,7 +15576,7 @@
           ttCtx.xaxisTooltip.classList.add('apexcharts-active');
           var cy = ttCtx.xaxisOffY + w.config.xaxis.tooltip.offsetY + w.globals.translateY + 1 + w.config.xaxis.offsetY;
           var xaxisTTText = ttCtx.xaxisTooltip.getBoundingClientRect();
-          var xaxisTTTextWidth = xaxisTTText.width;
+          var xaxisTTTextWidth = xaxisTTText.width / w.config.chart.scale;
           cx = cx - xaxisTTTextWidth / 2;
           if (!isNaN(cx)) {
             cx = cx + w.globals.translateX;
@@ -15596,7 +15600,7 @@
         var ycrosshairsHiddenRectY1 = parseInt(ttCtx.ycrosshairsHidden.getAttribute('y1'), 10);
         var cy = w.globals.translateY + ycrosshairsHiddenRectY1;
         var yAxisTTRect = ttCtx.yaxisTTEls[index].getBoundingClientRect();
-        var yAxisTTHeight = yAxisTTRect.height;
+        var yAxisTTHeight = yAxisTTRect.height / w.config.chart.scale;
         var cx = w.globals.translateYAxisX[index] - 2;
         if (w.config.yaxis[index].opposite) {
           cx = cx - 26;
@@ -15642,7 +15646,7 @@
         if (w.config.tooltip.followCursor) {
           var elGrid = ttCtx.getElGrid();
           var seriesBound = elGrid.getBoundingClientRect();
-          y = ttCtx.e.clientY + w.globals.translateY - seriesBound.top - tooltipRect.ttHeight / 2;
+          y = (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale + w.globals.translateY - tooltipRect.ttHeight / 2;
         } else {
           if (w.globals.isBarHorizontal) {
             // non follow shared tooltip in a horizontal bar chart
@@ -15795,7 +15799,7 @@
           }
         }
         if (!w.globals.isBarHorizontal) {
-          bcy = ttCtx.e.clientY - seriesBound.top - ttCtx.tooltipRect.ttHeight / 2;
+          bcy = (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale - ttCtx.tooltipRect.ttHeight / 2;
         } else {
           bcy = bcy + bh / 3;
         }
@@ -15876,7 +15880,7 @@
           if (w.config.chart.type === 'radar') {
             var elGrid = this.ttCtx.getElGrid();
             var seriesBound = elGrid.getBoundingClientRect();
-            cx = this.ttCtx.e.clientX - seriesBound.left;
+            cx = (this.ttCtx.e.clientX - seriesBound.left) / w.config.chart.scale;
           }
           this.tooltipPosition.moveTooltip(cx, cy, w.config.markers.hover.size);
         }
@@ -15998,8 +16002,8 @@
           }
           if (ttCtx.w.config.tooltip.followCursor) {
             var seriesBound = w.globals.dom.elWrap.getBoundingClientRect();
-            x = w.globals.clientX - seriesBound.left - ttCtx.tooltipRect.ttWidth / 2;
-            y = w.globals.clientY - seriesBound.top - ttCtx.tooltipRect.ttHeight - 5;
+            x = (w.globals.clientX - seriesBound.left) / w.config.chart.scale - ttCtx.tooltipRect.ttWidth / 2;
+            y = (w.globals.clientY - seriesBound.top) / w.config.chart.scale - ttCtx.tooltipRect.ttHeight - 5;
           }
         }
         return {
@@ -16047,7 +16051,7 @@
           if (ttCtx.w.config.tooltip.followCursor) {
             var elGrid = ttCtx.getElGrid();
             var seriesBound = elGrid.getBoundingClientRect();
-            y = ttCtx.e.clientY + w.globals.translateY - seriesBound.top;
+            y = (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale + w.globals.translateY;
           }
           if (val < 0) {
             y = cy;
@@ -16108,7 +16112,7 @@
         if (ttCtx.w.config.tooltip.followCursor) {
           var elGrid = ttCtx.getElGrid();
           var seriesBound = elGrid.getBoundingClientRect();
-          y = ttCtx.e.clientY - seriesBound.top;
+          y = (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale;
         }
 
         // if tooltip is still null, querySelector
@@ -16195,7 +16199,7 @@
           });
           if (w.config.tooltip.followCursor) {
             if (w.globals.isBarHorizontal) {
-              x = clientX - seriesBound.left + 15;
+              x = (clientX - seriesBound.left) / w.config.chart.scale + 15;
               y = cy - ttCtx.dataPointsDividedHeight + bh / 2 - ttCtx.tooltipRect.ttHeight / 2;
             } else {
               if (w.globals.isXNumeric) {
@@ -16203,7 +16207,7 @@
               } else {
                 x = cx - ttCtx.dataPointsDividedWidth + bw / 2;
               }
-              y = e.clientY - seriesBound.top - ttCtx.tooltipRect.ttHeight / 2 - 15;
+              y = (e.clientY - seriesBound.top) / w.config.chart.scale - ttCtx.tooltipRect.ttHeight / 2 - 15;
             }
           } else {
             if (w.globals.isBarHorizontal) {
@@ -16376,10 +16380,10 @@
         if (ttCtx.yaxisTooltips[index]) {
           var elGrid = ttCtx.getElGrid();
           var seriesBound = elGrid.getBoundingClientRect();
-          var hoverY = (clientY - seriesBound.top) * xyRatios.yRatio[index];
+          var hoverY = (clientY - seriesBound.top) / w.config.chart.scale * xyRatios.yRatio[index];
           var height = w.globals.maxYArr[index] - w.globals.minYArr[index];
           var val = w.globals.minYArr[index] + (height - hoverY);
-          ttCtx.tooltipPosition.moveYCrosshairs(clientY - seriesBound.top);
+          ttCtx.tooltipPosition.moveYCrosshairs((clientY - seriesBound.top) / w.config.chart.scale);
           ttCtx.yaxisTooltipText[index].innerHTML = lbFormatter(val);
           ttCtx.tooltipPosition.moveYAxisTooltip(index);
         }
@@ -16598,8 +16602,8 @@
         var w = this.w;
         var tooltipEl = this.getElTooltip();
         var tooltipRect = tooltipEl.getBoundingClientRect();
-        var ttWidth = tooltipRect.width + 10;
-        var ttHeight = tooltipRect.height + 10;
+        var ttWidth = tooltipRect.width / w.config.chart.scale + 10;
+        var ttHeight = tooltipRect.height / w.config.chart.scale + 10;
         var x = this.tConfig.fixed.offsetX;
         var y = this.tConfig.fixed.offsetY;
         var fixed = this.tConfig.fixed.position.toLowerCase();
@@ -16715,8 +16719,8 @@
         ttCtx.tooltipRect = {
           x: 0,
           y: 0,
-          ttWidth: tooltipEl.getBoundingClientRect().width,
-          ttHeight: tooltipEl.getBoundingClientRect().height
+          ttWidth: tooltipEl.getBoundingClientRect().width / w.config.chart.scale,
+          ttHeight: tooltipEl.getBoundingClientRect().height / w.config.chart.scale
         };
         ttCtx.e = e;
 
@@ -16847,8 +16851,8 @@
             i: parseInt(rel, 10) - 1,
             shared: false
           });
-          var x = w.globals.clientX - seriesBound.left - tooltipRect.ttWidth / 2;
-          var y = w.globals.clientY - seriesBound.top - tooltipRect.ttHeight - 10;
+          var x = (w.globals.clientX - seriesBound.left) / w.config.chart.scale - tooltipRect.ttWidth / 2;
+          var y = (w.globals.clientY - seriesBound.top) / w.config.chart.scale - tooltipRect.ttHeight - 10;
           tooltipEl.style.left = x + 'px';
           tooltipEl.style.top = y + 'px';
           if (w.config.legend.tooltipHoverFormatter) {

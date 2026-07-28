@@ -104,7 +104,7 @@ export default class Position {
         w.config.xaxis.offsetY
 
       let xaxisTTText = ttCtx.xaxisTooltip.getBoundingClientRect()
-      let xaxisTTTextWidth = xaxisTTText.width
+      let xaxisTTTextWidth = xaxisTTText.width / w.config.chart.scale
 
       cx = cx - xaxisTTTextWidth / 2
 
@@ -139,7 +139,7 @@ export default class Position {
     let cy = w.globals.translateY + ycrosshairsHiddenRectY1
 
     const yAxisTTRect = ttCtx.yaxisTTEls[index].getBoundingClientRect()
-    const yAxisTTHeight = yAxisTTRect.height
+    const yAxisTTHeight = yAxisTTRect.height / w.config.chart.scale
     let cx = w.globals.translateYAxisX[index] - 2
 
     if (w.config.yaxis[index].opposite) {
@@ -193,9 +193,8 @@ export default class Position {
       const elGrid = ttCtx.getElGrid()
       const seriesBound = elGrid.getBoundingClientRect()
       y =
-        ttCtx.e.clientY +
+        (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale +
         w.globals.translateY -
-        seriesBound.top -
         tooltipRect.ttHeight / 2
     } else {
       if (w.globals.isBarHorizontal) {
@@ -398,7 +397,9 @@ export default class Position {
     }
 
     if (!w.globals.isBarHorizontal) {
-      bcy = ttCtx.e.clientY - seriesBound.top - ttCtx.tooltipRect.ttHeight / 2
+      bcy =
+        (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale -
+        ttCtx.tooltipRect.ttHeight / 2
     } else {
       bcy = bcy + bh / 3
     }

@@ -49,8 +49,13 @@ class Intersect {
       }
       if (ttCtx.w.config.tooltip.followCursor) {
         let seriesBound = w.globals.dom.elWrap.getBoundingClientRect()
-        x = w.globals.clientX - seriesBound.left - ttCtx.tooltipRect.ttWidth / 2
-        y = w.globals.clientY - seriesBound.top - ttCtx.tooltipRect.ttHeight - 5
+        x =
+          (w.globals.clientX - seriesBound.left) / w.config.chart.scale -
+          ttCtx.tooltipRect.ttWidth / 2
+        y =
+          (w.globals.clientY - seriesBound.top) / w.config.chart.scale -
+          ttCtx.tooltipRect.ttHeight -
+          5
       }
     }
 
@@ -106,7 +111,9 @@ class Intersect {
       if (ttCtx.w.config.tooltip.followCursor) {
         const elGrid = ttCtx.getElGrid()
         const seriesBound = elGrid.getBoundingClientRect()
-        y = ttCtx.e.clientY + w.globals.translateY - seriesBound.top
+        y =
+          (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale +
+          w.globals.translateY
       }
 
       if (val < 0) {
@@ -184,7 +191,7 @@ class Intersect {
     if (ttCtx.w.config.tooltip.followCursor) {
       const elGrid = ttCtx.getElGrid()
       const seriesBound = elGrid.getBoundingClientRect()
-      y = ttCtx.e.clientY - seriesBound.top
+      y = (ttCtx.e.clientY - seriesBound.top) / w.config.chart.scale
     }
 
     // if tooltip is still null, querySelector
@@ -295,7 +302,7 @@ class Intersect {
 
       if (w.config.tooltip.followCursor) {
         if (w.globals.isBarHorizontal) {
-          x = clientX - seriesBound.left + 15
+          x = (clientX - seriesBound.left) / w.config.chart.scale + 15
           y =
             cy -
             ttCtx.dataPointsDividedHeight +
@@ -307,7 +314,10 @@ class Intersect {
           } else {
             x = cx - ttCtx.dataPointsDividedWidth + bw / 2
           }
-          y = e.clientY - seriesBound.top - ttCtx.tooltipRect.ttHeight / 2 - 15
+          y =
+            (e.clientY - seriesBound.top) / w.config.chart.scale -
+            ttCtx.tooltipRect.ttHeight / 2 -
+            15
         }
       } else {
         if (w.globals.isBarHorizontal) {

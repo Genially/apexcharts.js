@@ -1,6 +1,6 @@
 {
   "name": "@genially/apexcharts",
-  "version": "3.27.3-fix-2",
+  "version": "3.27.3-fix-3",
   "description": "A JavaScript Chart Library",
   "main": "dist/apexcharts.common.js",
   "unpkg": "dist/apexcharts.js",
