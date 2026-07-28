@@ -14761,7 +14761,7 @@
         if ((w.globals.comboCharts || hasBars) && !w.config.xaxis.convertedCatToNumeric) {
           xDivisor = hoverWidth / w.globals.dataPoints;
         }
-        var hoverX = (clientX - seriesBound.left - w.globals.barPadForNumericAxis) / w.config.chart.scale;
+        var hoverX = (clientX - seriesBound.left) / w.config.chart.scale - w.globals.barPadForNumericAxis;
         var hoverY = (clientY - seriesBound.top) / w.config.chart.scale;
         var notInRect = hoverX < 0 || hoverY < 0 || hoverX > w.globals.gridWidth || hoverY > w.globals.gridHeight;
         if (notInRect) {
