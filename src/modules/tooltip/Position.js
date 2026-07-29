@@ -103,8 +103,7 @@ export default class Position {
         1 +
         w.config.xaxis.offsetY
 
-      let xaxisTTText = ttCtx.xaxisTooltip.getBoundingClientRect()
-      let xaxisTTTextWidth = xaxisTTText.width / w.config.chart.scale
+      let xaxisTTTextWidth = ttCtx.xaxisTooltip.offsetWidth
 
       cx = cx - xaxisTTTextWidth / 2
 
@@ -138,8 +137,7 @@ export default class Position {
     )
     let cy = w.globals.translateY + ycrosshairsHiddenRectY1
 
-    const yAxisTTRect = ttCtx.yaxisTTEls[index].getBoundingClientRect()
-    const yAxisTTHeight = yAxisTTRect.height / w.config.chart.scale
+    const yAxisTTHeight = ttCtx.yaxisTTEls[index].offsetHeight
     let cx = w.globals.translateYAxisX[index] - 2
 
     if (w.config.yaxis[index].opposite) {

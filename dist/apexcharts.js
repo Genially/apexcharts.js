@@ -15067,13 +15067,13 @@
         });
 
         // Re-calculate tooltip dimensions now that we have drawn the text.
-        // clientX/clientY and getBoundingClientRect() are viewport px, already multiplied by
-        // the canvas zoom, while style.left/top resolve in the scaled container's local px.
-        // Genially's View renders the slide inside a transform: scale(), so normalise by
-        // chart.scale (default 1) — as Tooltip.Utils already does.
+        // offsetWidth/offsetHeight report the tooltip's layout size in local px, immune to the
+        // transform: scale() that Genially's View wraps the slide in. getBoundingClientRect()
+        // would return viewport px (already multiplied by the canvas zoom) and mis-size the
+        // tooltip inside the scaled container.
         var tooltipEl = this.ttCtx.getElTooltip();
-        this.ttCtx.tooltipRect.ttWidth = tooltipEl.getBoundingClientRect().width / w.config.chart.scale;
-        this.ttCtx.tooltipRect.ttHeight = tooltipEl.getBoundingClientRect().height / w.config.chart.scale;
+        this.ttCtx.tooltipRect.ttWidth = tooltipEl.offsetWidth;
+        this.ttCtx.tooltipRect.ttHeight = tooltipEl.offsetHeight;
       }
     }, {
       key: "printLabels",
@@ -15575,8 +15575,7 @@
         if (ttCtx.xaxisTooltip !== null) {
           ttCtx.xaxisTooltip.classList.add('apexcharts-active');
           var cy = ttCtx.xaxisOffY + w.config.xaxis.tooltip.offsetY + w.globals.translateY + 1 + w.config.xaxis.offsetY;
-          var xaxisTTText = ttCtx.xaxisTooltip.getBoundingClientRect();
-          var xaxisTTTextWidth = xaxisTTText.width / w.config.chart.scale;
+          var xaxisTTTextWidth = ttCtx.xaxisTooltip.offsetWidth;
           cx = cx - xaxisTTTextWidth / 2;
           if (!isNaN(cx)) {
             cx = cx + w.globals.translateX;
@@ -15599,8 +15598,7 @@
         }
         var ycrosshairsHiddenRectY1 = parseInt(ttCtx.ycrosshairsHidden.getAttribute('y1'), 10);
         var cy = w.globals.translateY + ycrosshairsHiddenRectY1;
-        var yAxisTTRect = ttCtx.yaxisTTEls[index].getBoundingClientRect();
-        var yAxisTTHeight = yAxisTTRect.height / w.config.chart.scale;
+        var yAxisTTHeight = ttCtx.yaxisTTEls[index].offsetHeight;
         var cx = w.globals.translateYAxisX[index] - 2;
         if (w.config.yaxis[index].opposite) {
           cx = cx - 26;
@@ -16601,9 +16599,8 @@
       value: function drawFixedTooltipRect() {
         var w = this.w;
         var tooltipEl = this.getElTooltip();
-        var tooltipRect = tooltipEl.getBoundingClientRect();
-        var ttWidth = tooltipRect.width / w.config.chart.scale + 10;
-        var ttHeight = tooltipRect.height / w.config.chart.scale + 10;
+        var ttWidth = tooltipEl.offsetWidth + 10;
+        var ttHeight = tooltipEl.offsetHeight + 10;
         var x = this.tConfig.fixed.offsetX;
         var y = this.tConfig.fixed.offsetY;
         var fixed = this.tConfig.fixed.position.toLowerCase();
@@ -16719,8 +16716,8 @@
         ttCtx.tooltipRect = {
           x: 0,
           y: 0,
-          ttWidth: tooltipEl.getBoundingClientRect().width / w.config.chart.scale,
-          ttHeight: tooltipEl.getBoundingClientRect().height / w.config.chart.scale
+          ttWidth: tooltipEl.offsetWidth,
+          ttHeight: tooltipEl.offsetHeight
         };
         ttCtx.e = e;
 
