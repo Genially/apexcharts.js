@@ -42,8 +42,8 @@ export default class Utils {
     }
 
     let hoverX =
-      (clientX - seriesBound.left - w.globals.barPadForNumericAxis) /
-      w.config.chart.scale
+      (clientX - seriesBound.left) / w.config.chart.scale -
+      w.globals.barPadForNumericAxis
     let hoverY = (clientY - seriesBound.top) / w.config.chart.scale
 
     const notInRect =

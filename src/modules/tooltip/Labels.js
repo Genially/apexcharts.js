@@ -40,11 +40,15 @@ export default class Labels {
       e
     })
 
-    // Re-calculate tooltip dimensions now that we have drawn the text
+    // Re-calculate tooltip dimensions now that we have drawn the text.
+    // offsetWidth/offsetHeight report the tooltip's layout size in local px, immune to the
+    // transform: scale() that Genially's View wraps the slide in. getBoundingClientRect()
+    // would return viewport px (already multiplied by the canvas zoom) and mis-size the
+    // tooltip inside the scaled container.
     const tooltipEl = this.ttCtx.getElTooltip()
 
-    this.ttCtx.tooltipRect.ttWidth = tooltipEl.getBoundingClientRect().width
-    this.ttCtx.tooltipRect.ttHeight = tooltipEl.getBoundingClientRect().height
+    this.ttCtx.tooltipRect.ttWidth = tooltipEl.offsetWidth
+    this.ttCtx.tooltipRect.ttHeight = tooltipEl.offsetHeight
   }
 
   printLabels({ i, j, values, ttItems, shared, e }) {

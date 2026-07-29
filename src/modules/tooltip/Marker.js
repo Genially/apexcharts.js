@@ -93,7 +93,7 @@ export default class Marker {
         const elGrid = this.ttCtx.getElGrid()
         const seriesBound = elGrid.getBoundingClientRect()
 
-        cx = this.ttCtx.e.clientX - seriesBound.left
+        cx = (this.ttCtx.e.clientX - seriesBound.left) / w.config.chart.scale
       }
 
       this.tooltipPosition.moveTooltip(cx, cy, w.config.markers.hover.size)

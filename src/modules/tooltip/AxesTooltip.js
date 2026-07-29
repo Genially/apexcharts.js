@@ -177,12 +177,16 @@ class AxesTooltip {
       const elGrid = ttCtx.getElGrid()
       const seriesBound = elGrid.getBoundingClientRect()
 
-      const hoverY = (clientY - seriesBound.top) * xyRatios.yRatio[index]
+      const hoverY =
+        ((clientY - seriesBound.top) / w.config.chart.scale) *
+        xyRatios.yRatio[index]
       const height = w.globals.maxYArr[index] - w.globals.minYArr[index]
 
       const val = w.globals.minYArr[index] + (height - hoverY)
 
-      ttCtx.tooltipPosition.moveYCrosshairs(clientY - seriesBound.top)
+      ttCtx.tooltipPosition.moveYCrosshairs(
+        (clientY - seriesBound.top) / w.config.chart.scale
+      )
       ttCtx.yaxisTooltipText[index].innerHTML = lbFormatter(val)
       ttCtx.tooltipPosition.moveYAxisTooltip(index)
     }
